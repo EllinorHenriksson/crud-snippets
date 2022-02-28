@@ -5,6 +5,8 @@
  * @version 1.0.0
  */
 
+const viewData = { loggedIn: true }
+
 /**
  * Encapsulates a controller.
  */
@@ -18,22 +20,33 @@ export class SnippetsController {
    */
   index (req, res, next) {
     // Show all snippets, to both anonymous and authenticated users.
+    viewData.snippets = [] // KOM IHÅG ATT ÄNDRA
+    res.render('snippets/index', { viewData })
   }
 
   register (req, res, next) {
     // Return html form so that user can register.
+    res.render('snippets/register', { viewData })
   }
 
   registerPost (req, res, next) {
     // Register user.
+    res.redirect('./login')
   }
 
   login (req, res, next) {
-    // Return html form so that user can login.
+    // Return html form so that user can log in.
+    res.render('snippets/login', { viewData })
   }
 
   loginPost (req, res, next) {
     // Log in user.
+    res.redirect('.')
+  }
+
+  logoutPost (req, res, next) {
+    // Log out user.
+    res.redirect('.')
   }
 
   /**

@@ -11,6 +11,6 @@ import { router as snippetsRouter } from './snippets-router.js'
 
 export const router = express.Router()
 
-router.use('/', snippetsRouter)
+router.use('/snippets', snippetsRouter)
 
 router.use('*', (req, res, next) => next(createError(404)))

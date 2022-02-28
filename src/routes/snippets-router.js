@@ -19,5 +19,5 @@ router.post('/create', controller.createPost)
 router.get('/:id/update', controller.update)
 router.post('/:id/update', controller.updatePost)
 
-router.get('/:id/delete', controller.delete)
-router.post('/:id/delete', controller.deletePost)
+//router.get('/:id/logout', controller.logout)
+router.post('/:id/logout', controller.logoutPost)
