@@ -19,6 +19,22 @@ const schema = new mongoose.Schema({
   timestamps: true
 })
 
+/**
+ * Authenticates the user.
+ *
+ * @param {string} username - The user's username.
+ * @param {string} password - The user's password.
+ * @returns {object} - An object representing the user.
+ */
+schema.statics.authenticate = async function (username, password) {
+  const user = await this.findOne({ username })
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    throw new Error('Invalid login attempt.')
+  }
+
+  return user
+}
+
 // Salt and hash password before saving.
 schema.pre('save', async function () {
   this.password = await bcrypt.hash(this.password, 8)

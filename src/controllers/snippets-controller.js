@@ -5,14 +5,29 @@
  * @version 1.0.0
  */
 
+import createError from 'http-errors'
 import { User } from '../models/user.js'
-
-const viewData = { loggedIn: false }
 
 /**
  * Encapsulates a controller.
  */
 export class SnippetsController {
+  authorizeLogin (req, res, next) {
+    if (!req.session.user) {
+      next()
+    } else {
+      next(createError(404))
+    }
+  }
+
+  authorizeCreate (req, res, next) {
+    if (req.session.user) {
+      next()
+    } else {
+      next(createError(404))
+    }
+  }
+
   /**
    * Displays a list of all snippets.
    *
@@ -22,13 +37,13 @@ export class SnippetsController {
    */
   index (req, res, next) {
     // Show all snippets, to both anonymous and authenticated users.
-    viewData.snippets = [] // KOM IHÅG ATT ÄNDRA
+    const viewData = { snippets: [] } // KOM IHÅG ATT ÄNDRA
     res.render('snippets/index', { viewData })
   }
 
   register (req, res, next) {
     // Return html form so that user can register.
-    res.render('snippets/register', { viewData })
+    res.render('snippets/register')
   }
 
   async registerPost (req, res, next) {
@@ -48,17 +63,45 @@ export class SnippetsController {
 
   login (req, res, next) {
     // Return html form so that user can log in.
-    res.render('/login', { viewData })
+    res.render('snippets/login')
   }
 
-  loginPost (req, res, next) {
+  async loginPost (req, res, next) {
     // Log in user.
-    res.redirect('.')
+    try {
+      const user = await User.authenticate(req.body.username, req.body.password)
+      req.session.regenerate(error => {
+        if (error) {
+          throw new Error('Failed to regenerate session.')
+        }
+      })
+
+      // Store authenticated user in session store.
+      req.session.user = user.username
+
+      req.session.flash = { type: 'success', text: 'Login succeeded.' }
+      res.redirect('.')
+    } catch (error) {
+      req.session.flash = { type: 'error', text: error.message }
+      res.redirect('./login')
+    }
   }
 
   logoutPost (req, res, next) {
     // Log out user.
-    res.redirect('.')
+    try {
+      req.session.destroy(error => {
+        if (error) {
+          throw new Error('Failed to log out.')
+        }
+      })
+
+      // OBS! Hur få till ett flash-meddelande när session redan är destroyed?
+      // req.session.flash = { type: 'success', text: 'Logout succeeded.' }
+      res.redirect('.')
+    } catch (error) {
+      req.session.flash = { type: 'error', text: error.message }
+    }
   }
 
   /**
@@ -69,6 +112,7 @@ export class SnippetsController {
    */
   create (req, res) {
     // Render a html form. User needs to be authenticated.
+    res.render('snippets/create')
   }
 
   /**

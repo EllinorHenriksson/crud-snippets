@@ -7,7 +7,7 @@
       <li>
         <a href="./snippets">Snippets</a>
       </li>
-      <% if (viewData.loggedIn === false) { %>
+      <% if (typeof user === 'undefined') { %>
         <li>
           <a href="./snippets/register">Register</a>
         </li>
