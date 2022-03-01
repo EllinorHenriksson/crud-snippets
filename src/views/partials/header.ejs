@@ -1,0 +1,27 @@
+<nav>
+  <div>
+    <ul>
+      <li>
+        CRUD Snippets
+      </li>
+      <li>
+        <a href="./snippets">Snippets</a>
+      </li>
+      <% if (viewData.loggedIn === false) { %>
+        <li>
+          <a href="./snippets/register">Register</a>
+        </li>
+        <li>
+          <a href="./snippets/login">Login</a>
+        </li>
+      <% } else { %>
+        <li>
+          <a href="./snippets/create">Create</a>
+        </li>
+        <li>
+          <form action="./snippets/logout" method="post"><button type="submit">Log out</button></form>
+        </li>
+      <% } %>
+    </ul>
+  </div>
+</nav>

@@ -11,13 +11,13 @@
 </head>
 
 <body>
-  <% if (viewData.loggedIn === false) { %>
-    <%- include('../partials/header1') %>
-  <% } else { %>
-    <%- include('../partials/header2') %>
-  <% } %>
-  <main>
+  <header>
+    <%- include('../partials/header') %>
+  </header>
+  <aside>
     <%- include('../partials/flash') %>
+  </aside>
+  <main>
     <%- body %>
   </main>
 </body>

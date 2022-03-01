@@ -5,7 +5,9 @@
  * @version 1.0.0
  */
 
-const viewData = { loggedIn: true }
+import { User } from '../models/user.js'
+
+const viewData = { loggedIn: false }
 
 /**
  * Encapsulates a controller.
@@ -29,14 +31,24 @@ export class SnippetsController {
     res.render('snippets/register', { viewData })
   }
 
-  registerPost (req, res, next) {
+  async registerPost (req, res, next) {
     // Register user.
-    res.redirect('./login')
+    try {
+      const user = new User({ username: req.body.username, password: req.body.password })
+      await user.save()
+
+      req.session.flash = { type: 'success', text: 'Registration succeeded.' }
+
+      res.redirect('./login')
+    } catch (error) {
+      req.session.flash = { type: 'error', text: error.message }
+      res.redirect('./register')
+    }
   }
 
   login (req, res, next) {
     // Return html form so that user can log in.
-    res.render('snippets/login', { viewData })
+    res.render('/login', { viewData })
   }
 
   loginPost (req, res, next) {

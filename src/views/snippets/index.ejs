@@ -1,5 +1,5 @@
 <h1>Snippets</h1>
-<%#
+
 <table>
   <caption>List of snippets</caption>
   <thead>
@@ -7,7 +7,7 @@
     </tr>
   </thead>
   <tbody>
-    for (const snippet of viewData.snippets) {
+    <% for (const snippet of viewData.snippets) { %>
       <tr>
         <td><%= snippet.code %></td>
         <td><% if (snippet.owner === true) { %>
@@ -15,7 +15,6 @@
           <a href="./delete"><img src="./img/delete.png" alt="Delete icon"></a>    
         <% } %></td>
       </tr>
-    }
+    <% } %>
   </tbody>
 </table>
-%>
