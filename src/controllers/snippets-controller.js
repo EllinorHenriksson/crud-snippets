@@ -62,6 +62,62 @@ export class SnippetsController {
     }
   }
 
+  async filter (req, res, next) {
+    try {
+      const tag = req.session.filter.tag
+      const owner = req.session.filter.owner
+
+      const filter = {}
+      if (tag) {
+        filter.tags = tag
+      }
+      if (owner) {
+        filter.owner = owner
+      }
+
+      const viewData = {
+        filter: {
+          tag: tag,
+          owner: owner
+        },
+        snippets: (await Snippet.find(filter)).map(snippet => ({
+          code: snippet.code,
+          owner: {
+            normal: snippet.owner,
+            encoded: encodeURIComponent(snippet.owner)
+          },
+          tags: snippet.tags.map(tag => ({
+            normal: tag,
+            encoded: encodeURIComponent(tag)
+          })),
+          updated: formatDistanceToNow(snippet.createdAt, { addSuffix: true })
+        })),
+        user: req.session.user
+      }
+
+      res.render('snippets/index', { viewData })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  filterPost (req, res, next) {
+    try {
+      if (!req.body.tag && !req.body.owner) {
+        throw new Error('You have to specify one tag and/or one username')
+      }
+      req.session.filter = {
+        tag: req.body.tag,
+        owner: req.body.owner
+      }
+
+      res.redirect('./filter')
+    } catch (error) {
+      req.session.flash = { type: 'error', text: error.message }
+      res.redirect('.')
+    }
+  }
+
   register (req, res, next) {
     // Return html form so that user can register.
     res.render('snippets/register')

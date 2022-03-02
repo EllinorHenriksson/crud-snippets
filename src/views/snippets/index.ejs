@@ -1,5 +1,26 @@
 <h1>Snippets</h1>
 
+<form action="./snippets/filter" method="post">
+  <fieldset>
+    <legend>Filter results</legend>
+    <label>Tag (#): <input type="text" name="tag" placeholder="#tag"></label>
+    <label>Created by: <input type="text" name="owner" placeholder="username"></label>
+    <button type="submit">Filter</button>
+  </fieldset>
+</form>
+
+<% if (viewData.filter) { %>
+  <p>Filters:
+    <% if (viewData.filter.tag) { %>
+      <%= viewData.filter.tag %>
+    <% } %>
+    <% if (viewData.filter.owner) { %>
+      <%= viewData.filter.owner %>
+    <% } %>
+  </p>
+  <div><a href="./snippets">Clear</a></div>
+<% } %>
+
 <table>
   <caption>List of snippets</caption>
   <thead>
@@ -10,11 +31,11 @@
       <tr>
         <td>
           <% for (const tag of snippet.tags) { %>
-            <a href="./snippets?tag=<%= tag.encoded %>&owner=none"><%= tag.normal %></a>
+            <%= tag.normal %>
           <% } %>
         </td>
         <td id="code"><%= snippet.code %></td>
-        <td><a href="./snippets?tag=none&owner=<%= snippet.owner.encoded %>"><%= snippet.owner.normal %></a></td>
+        <td><%= snippet.owner.normal %></td>
         <td><%= snippet.updated %></td>
         <td><% if (snippet.owner.normal === viewData.user) { %>
           <form action="./snippets/update" method="get">

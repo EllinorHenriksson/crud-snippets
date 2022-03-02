@@ -7,6 +7,9 @@ const controller = new SnippetsController()
 
 router.get('/', controller.index)
 
+router.get('/filter', controller.filter)
+router.post('/filter', controller.filterPost)
+
 router.get('/register', controller.register)
 router.post('/register', controller.registerPost)
 
