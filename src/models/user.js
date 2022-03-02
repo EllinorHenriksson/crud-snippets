@@ -5,13 +5,13 @@ import bcrypt from 'bcryptjs'
 const schema = new mongoose.Schema({
   username: {
     type: String,
-    required: true,
+    required: '`{PATH}` is required!',
     unique: true,
     trim: true
   },
   password: {
     type: String,
-    required: true,
+    required: '`{PATH}` is required!',
     minlength: [10, 'The password must be at least 10 characters long.'],
     maxlength: [1000, 'The password must not be longer than 1000 characters.']
   }

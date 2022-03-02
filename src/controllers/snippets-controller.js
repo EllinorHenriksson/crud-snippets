@@ -7,6 +7,7 @@
 
 import createError from 'http-errors'
 import { User } from '../models/user.js'
+import { Snippet } from '../models/snippet.js'
 
 /**
  * Encapsulates a controller.
@@ -35,10 +36,25 @@ export class SnippetsController {
    * @param {object} res - Express response object.
    * @param {Function} next - Express next middleware function.
    */
-  index (req, res, next) {
+  async index (req, res, next) {
     // Show all snippets, to both anonymous and authenticated users.
-    const viewData = { snippets: [] } // KOM IHÅG ATT ÄNDRA
-    res.render('snippets/index', { viewData })
+    try {
+      const viewData = {
+        snippets: (await Snippet.find()).map(snippet => ({
+          code: snippet.code,
+          owner: snippet.owner
+        })),
+        user: req.session.user
+      }
+
+      for (const snippet of viewData.snippets) {
+        console.log('Code: ', snippet.code, 'Owner: ', snippet.owner)
+      }
+
+      res.render('snippets/index', { viewData })
+    } catch (error) {
+      next(error)
+    }
   }
 
   register (req, res, next) {
@@ -121,8 +137,19 @@ export class SnippetsController {
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
    */
-  createPost (req, res) {
+  async createPost (req, res) {
     // Create a new snippet. User needs to be autheticated.
+    try {
+      const snippet = new Snippet({ code: req.body.snippet, owner: req.session.user })
+      await snippet.save()
+
+      req.session.flash = { type: 'success', text: 'Snippet was successfully created.' }
+
+      res.redirect('.')
+    } catch (error) {
+      req.session.flash = { type: 'error', text: error.message }
+      res.redirect('./create')
+    }
   }
 
   /**

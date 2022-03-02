@@ -10,9 +10,13 @@
     <% for (const snippet of viewData.snippets) { %>
       <tr>
         <td><%= snippet.code %></td>
-        <td><% if (snippet.owner === true) { %>
-          <a href="./snippets/update"><img src="./img/edit.png" alt="Edit icon"></a>
-          <a href="./snippets/delete"><img src="./img/delete.png" alt="Delete icon"></a>    
+        <td><% if (snippet.owner === viewData.user) { %>
+          <form action="./snippets/update" method="get">
+            <button type="submit"><img src="./img/edit.png" alt="Edit icon"></button>
+          </form>
+          <form action="./snippets/delete" method="post">
+            <button type="submit"><img src="./img/delete.png" alt="Delete icon"></button>
+          </form>
         <% } %></td>
       </tr>
     <% } %>
