@@ -9,7 +9,7 @@
   <tbody>
     <% for (const snippet of viewData.snippets) { %>
       <tr>
-        <td><%= snippet.code %></td>
+        <td id="code"><%= snippet.code %></td>
         <td><% if (snippet.owner === viewData.user) { %>
           <form action="./snippets/update" method="get">
             <button type="submit"><img src="./img/edit.png" alt="Edit icon"></button>

@@ -47,10 +47,6 @@ export class SnippetsController {
         user: req.session.user
       }
 
-      for (const snippet of viewData.snippets) {
-        console.log('Code: ', snippet.code, 'Owner: ', snippet.owner)
-      }
-
       res.render('snippets/index', { viewData })
     } catch (error) {
       next(error)
@@ -140,7 +136,10 @@ export class SnippetsController {
   async createPost (req, res) {
     // Create a new snippet. User needs to be autheticated.
     try {
-      const snippet = new Snippet({ code: req.body.snippet, owner: req.session.user })
+      const snippet = new Snippet({
+        code: req.body.snippet,
+        owner: req.session.user
+      })
       await snippet.save()
 
       req.session.flash = { type: 'success', text: 'Snippet was successfully created.' }
