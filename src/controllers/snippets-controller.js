@@ -6,6 +6,7 @@
  */
 
 import createError from 'http-errors'
+import { formatDistanceToNow } from 'date-fns'
 import { User } from '../models/user.js'
 import { Snippet } from '../models/snippet.js'
 
@@ -42,7 +43,15 @@ export class SnippetsController {
       const viewData = {
         snippets: (await Snippet.find()).map(snippet => ({
           code: snippet.code,
-          owner: snippet.owner
+          owner: {
+            normal: snippet.owner,
+            encoded: encodeURIComponent(snippet.owner)
+          },
+          tags: snippet.tags.map(tag => ({
+            normal: tag,
+            encoded: encodeURIComponent(tag)
+          })),
+          updated: formatDistanceToNow(snippet.createdAt, { addSuffix: true })
         })),
         user: req.session.user
       }
@@ -138,7 +147,13 @@ export class SnippetsController {
     try {
       const snippet = new Snippet({
         code: req.body.snippet,
-        owner: req.session.user
+        owner: req.session.user,
+        tags: req.body.tags.trim().split(' ').map(tag => {
+          if (!tag.startsWith('#')) {
+            return tag.padStart(tag.length + 1, '#')
+          }
+          return tag
+        })
       })
       await snippet.save()
 

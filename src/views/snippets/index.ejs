@@ -3,14 +3,20 @@
 <table>
   <caption>List of snippets</caption>
   <thead>
-    <tr><th scope="col">Snippet</th><th scope="col">Edit</th>
-    </tr>
+    <tr><th scope="col">Tags</th><th scope="col">Code</th><th scope="col">Created by</th><th scope="col">Last updated</th><th scope="col">Edit</th></tr>
   </thead>
   <tbody>
     <% for (const snippet of viewData.snippets) { %>
       <tr>
+        <td>
+          <% for (const tag of snippet.tags) { %>
+            <a href="./snippets?tag=<%= tag.encoded %>&owner=none"><%= tag.normal %></a>
+          <% } %>
+        </td>
         <td id="code"><%= snippet.code %></td>
-        <td><% if (snippet.owner === viewData.user) { %>
+        <td><a href="./snippets?tag=none&owner=<%= snippet.owner.encoded %>"><%= snippet.owner.normal %></a></td>
+        <td><%= snippet.updated %></td>
+        <td><% if (snippet.owner.normal === viewData.user) { %>
           <form action="./snippets/update" method="get">
             <button type="submit"><img src="./img/edit.png" alt="Edit icon"></button>
           </form>

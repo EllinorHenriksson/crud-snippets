@@ -11,6 +11,9 @@ const schema = new mongoose.Schema({
   owner: {
     type: String,
     required: true
+  },
+  tags: {
+    type: [String]
   }
 }, {
   timestamps: true,
