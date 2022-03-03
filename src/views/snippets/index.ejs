@@ -31,17 +31,17 @@
       <tr>
         <td>
           <% for (const tag of snippet.tags) { %>
-            <%= tag.normal %>
+            <%= tag %>
           <% } %>
         </td>
         <td id="code"><%= snippet.code %></td>
-        <td><%= snippet.owner.normal %></td>
+        <td><%= snippet.owner %></td>
         <td><%= snippet.updated %></td>
-        <td><% if (snippet.owner.normal === viewData.user) { %>
-          <form action="./snippets/update" method="get">
+        <td><% if (snippet.owner === viewData.user) { %>
+          <form action="./snippets/<%= snippet.id %>/update" method="get">
             <button type="submit"><img src="./img/edit.png" alt="Edit icon"></button>
           </form>
-          <form action="./snippets/delete" method="post">
+          <form action="./snippets/<%= snippet.id %>/delete" method="get">
             <button type="submit"><img src="./img/delete.png" alt="Delete icon"></button>
           </form>
         <% } %></td>

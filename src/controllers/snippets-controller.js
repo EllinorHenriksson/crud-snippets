@@ -30,6 +30,19 @@ export class SnippetsController {
     }
   }
 
+  async authorizeDelete (req, res, next) {
+    const id = req.url.slice(1, -8)
+    const snippet = await Snippet.findById(id)
+
+    if (!req.session.user) {
+      next(createError(404))
+    } else if (req.session.user !== snippet.owner) {
+      next(createError(403))
+    } else {
+      next()
+    }
+  }
+
   /**
    * Displays a list of all snippets.
    *
@@ -42,15 +55,10 @@ export class SnippetsController {
     try {
       const viewData = {
         snippets: (await Snippet.find()).map(snippet => ({
+          id: snippet._id,
           code: snippet.code,
-          owner: {
-            normal: snippet.owner,
-            encoded: encodeURIComponent(snippet.owner)
-          },
-          tags: snippet.tags.map(tag => ({
-            normal: tag,
-            encoded: encodeURIComponent(tag)
-          })),
+          owner: snippet.owner,
+          tags: snippet.tags,
           updated: formatDistanceToNow(snippet.createdAt, { addSuffix: true })
         })),
         user: req.session.user
@@ -81,15 +89,10 @@ export class SnippetsController {
           owner: owner
         },
         snippets: (await Snippet.find(filter)).map(snippet => ({
+          id: snippet._id,
           code: snippet.code,
-          owner: {
-            normal: snippet.owner,
-            encoded: encodeURIComponent(snippet.owner)
-          },
-          tags: snippet.tags.map(tag => ({
-            normal: tag,
-            encoded: encodeURIComponent(tag)
-          })),
+          owner: snippet.owner,
+          tags: snippet.tags,
           updated: formatDistanceToNow(snippet.createdAt, { addSuffix: true })
         })),
         user: req.session.user
@@ -242,14 +245,9 @@ export class SnippetsController {
     // Update snippet. User needs to be authenticated, and authorized (i.e. needs to be the owner/creator of the snippet).
   }
 
-  /**
-   * Returns a HTML form for deleting a snippet.
-   *
-   * @param {object} req - Express request object.
-   * @param {object} res - Express response object.
-   */
-  delete (req, res) {
-    // Return html form so user can delete his/her snippet. User needs to be authenticated, and authorized (i.e. needs to be the owner/creator of the snippet).
+  delete (req, res, next) {
+    const viewData = { id: req.url.slice(1, -8) }
+    res.render('snippets/delete', { viewData })
   }
 
   /**
@@ -258,7 +256,15 @@ export class SnippetsController {
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
    */
-  deletePost (req, res) {
+  async deletePost (req, res) {
     // Delete snippet. User needs to be authenticated, and authorized (i.e. needs to be the owner/creator of the snippet).
+    try {
+      await Snippet.findByIdAndDelete(req.body.id)
+      req.session.flash = { type: 'success', text: 'The snippet was successfully deleted.' }
+      res.redirect('.')
+    } catch (error) {
+      req.session.flash = { type: 'error', text: error.message }
+      res.redirect(`./${req.body.id}/delete`)
+    }
   }
 }

@@ -22,8 +22,8 @@ router.post('/create', controller.authorizeCreate, controller.createPost)
 router.get('/:id/update', controller.update)
 router.post('/:id/update', controller.updatePost)
 
-router.get('/:id/delete', controller.delete)
-router.post('/:id/delete', controller.deletePost)
+router.get('/:id/delete', controller.authorizeDelete, controller.delete)
+router.post('/:id/delete', controller.authorizeDelete, controller.deletePost)
 
 // OBS! Fundera på om path bör vara /user=username/logout
 router.post('/logout', controller.logoutPost)
