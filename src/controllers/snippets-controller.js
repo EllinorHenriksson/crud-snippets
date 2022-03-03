@@ -14,7 +14,14 @@ import { Snippet } from '../models/snippet.js'
  * Encapsulates a controller.
  */
 export class SnippetsController {
-  authorizeLogin (req, res, next) {
+  /**
+   * Authorizes the user, who must be anonymous.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
+   */
+  authorizeRegLogin (req, res, next) {
     if (!req.session.user) {
       next()
     } else {
@@ -22,7 +29,14 @@ export class SnippetsController {
     }
   }
 
-  authorizeCreate (req, res, next) {
+  /**
+   * Authorizes the user, who must be logged in.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
+   */
+  authorizeCreLogout (req, res, next) {
     if (req.session.user) {
       next()
     } else {
@@ -30,8 +44,17 @@ export class SnippetsController {
     }
   }
 
-  async authorizeDelete (req, res, next) {
-    const id = req.url.slice(1, -8)
+  /**
+   * Authorizes the user, who must be logged in and own the snippet.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
+   */
+  async authorizeUpDel (req, res, next) {
+    const firstIndex = req.url.indexOf('/')
+    const secondIndex = req.url.indexOf('/', firstIndex + 1)
+    const id = req.url.slice(firstIndex + 1, secondIndex)
     const snippet = await Snippet.findById(id)
 
     if (!req.session.user) {
@@ -141,13 +164,25 @@ export class SnippetsController {
     }
   }
 
-  login (req, res, next) {
-    // Return html form so that user can log in.
+  /**
+   * Returns a HTML form for the user to log in.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   */
+  login (req, res) {
+    // User must be anonymous.
     res.render('snippets/login')
   }
 
-  async loginPost (req, res, next) {
-    // Log in user.
+  /**
+   * Logs in a user.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   */
+  async loginPost (req, res) {
+    // User must be anonymous.
     try {
       const user = await User.authenticate(req.body.username, req.body.password)
       req.session.regenerate(error => {
@@ -165,6 +200,10 @@ export class SnippetsController {
       req.session.flash = { type: 'error', text: error.message }
       res.redirect('./login')
     }
+  }
+
+  logout (req, res) {
+    res.render('snippets/logout')
   }
 
   logoutPost (req, res, next) {
@@ -236,7 +275,7 @@ export class SnippetsController {
   }
 
   /**
-   * Updates snippet.
+   * Updates a snippet.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
@@ -245,13 +284,19 @@ export class SnippetsController {
     // Update snippet. User needs to be authenticated, and authorized (i.e. needs to be the owner/creator of the snippet).
   }
 
-  delete (req, res, next) {
+  /**
+   * Returns a HTML form for deleting a snippet.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   */
+  delete (req, res) {
     const viewData = { id: req.url.slice(1, -8) }
     res.render('snippets/delete', { viewData })
   }
 
   /**
-   * Deletes snippet.
+   * Deletes a snippet.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
@@ -261,10 +306,10 @@ export class SnippetsController {
     try {
       await Snippet.findByIdAndDelete(req.body.id)
       req.session.flash = { type: 'success', text: 'The snippet was successfully deleted.' }
-      res.redirect('.')
+      res.redirect('..')
     } catch (error) {
       req.session.flash = { type: 'error', text: error.message }
-      res.redirect(`./${req.body.id}/delete`)
+      res.redirect('./delete')
     }
   }
 }

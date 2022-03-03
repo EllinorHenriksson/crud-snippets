@@ -2,7 +2,7 @@
 
 <p>Are you sure you want to delete the snippet?</p>
 
-<form action="./snippets/ <% viewData.id %>/delete" method="post">
+<form action="./snippets/<%= viewData.id %>/delete" method="post">
   <input type="text" name="id" value="<%= viewData.id %>">
   <button type="submit">Yes</button>
 </form>

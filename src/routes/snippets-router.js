@@ -10,20 +10,20 @@ router.get('/', controller.index)
 router.get('/filter', controller.filter)
 router.post('/filter', controller.filterPost)
 
-router.get('/register', controller.register)
-router.post('/register', controller.registerPost)
+router.get('/register', controller.authorizeRegLogin, controller.register)
+router.post('/register', controller.authorizeRegLogin, controller.registerPost)
 
-router.get('/login', controller.authorizeLogin, controller.login)
-router.post('/login', controller.authorizeLogin, controller.loginPost)
+router.get('/login', controller.authorizeRegLogin, controller.login)
+router.post('/login', controller.authorizeRegLogin, controller.loginPost)
 
-router.get('/create', controller.authorizeCreate, controller.create)
-router.post('/create', controller.authorizeCreate, controller.createPost)
+router.get('/logout', controller.authorizeCreLogout, controller.logout)
+router.post('/logout', controller.authorizeCreLogout, controller.logoutPost)
 
-router.get('/:id/update', controller.update)
-router.post('/:id/update', controller.updatePost)
+router.get('/create', controller.authorizeCreLogout, controller.create)
+router.post('/create', controller.authorizeCreLogout, controller.createPost)
 
-router.get('/:id/delete', controller.authorizeDelete, controller.delete)
-router.post('/:id/delete', controller.authorizeDelete, controller.deletePost)
+router.get('/:id/update', controller.authorizeUpDel, controller.update)
+router.post('/:id/update', controller.authorizeUpDel, controller.updatePost)
 
-// OBS! Fundera på om path bör vara /user=username/logout
-router.post('/logout', controller.logoutPost)
+router.get('/:id/delete', controller.authorizeUpDel, controller.delete)
+router.post('/:id/delete', controller.authorizeUpDel, controller.deletePost)

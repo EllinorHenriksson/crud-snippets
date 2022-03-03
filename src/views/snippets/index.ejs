@@ -34,16 +34,16 @@
             <%= tag %>
           <% } %>
         </td>
-        <td id="code"><%= snippet.code %></td>
+        <td id="code"><code><%= snippet.code %></code></td>
         <td><%= snippet.owner %></td>
         <td><%= snippet.updated %></td>
         <td><% if (snippet.owner === viewData.user) { %>
-          <form action="./snippets/<%= snippet.id %>/update" method="get">
-            <button type="submit"><img src="./img/edit.png" alt="Edit icon"></button>
-          </form>
-          <form action="./snippets/<%= snippet.id %>/delete" method="get">
-            <button type="submit"><img src="./img/delete.png" alt="Delete icon"></button>
-          </form>
+          <div>
+            <a href="./snippets/<%= snippet.id %>/update"><img src="./img/edit.png" alt="Edit icon"></a>
+          </div>
+          <div>
+            <a href="./snippets/<%= snippet.id %>/delete"><img src="./img/delete.png" alt="Delete icon"></a>
+          </div>
         <% } %></td>
       </tr>
     <% } %>
