@@ -1,6 +1,6 @@
 <h1>Snippets</h1>
 
-<form action="./snippets/filter" method="post">
+<form action="./snippets" method="post">
   <fieldset>
     <legend>Filter results</legend>
     <label>Tag (#): <input type="text" name="tag" placeholder="#tag"></label>
@@ -18,7 +18,7 @@
       <%= viewData.filter.owner %>
     <% } %>
   </p>
-  <div><a href="./snippets">Clear</a></div>
+  <form action="./snippets" method="post"><button type="submit">Clear</button></form>
 <% } %>
 
 <table>

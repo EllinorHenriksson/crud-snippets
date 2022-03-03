@@ -30,7 +30,7 @@ export class SnippetsController {
   }
 
   /**
-   * Authorizes the user, who must be logged in.
+   * Authorizes the user, who must be authenticated.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
@@ -45,7 +45,7 @@ export class SnippetsController {
   }
 
   /**
-   * Authorizes the user, who must be logged in and own the snippet.
+   * Authorizes the user, who must be authenticated and own the snippet.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
@@ -67,25 +67,40 @@ export class SnippetsController {
   }
 
   /**
-   * Displays a list of all snippets.
+   * Displays a list of snippets, with and without filter.
+   * User can be either anonymous or authenticated.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
    * @param {Function} next - Express next middleware function.
    */
   async index (req, res, next) {
-    // Show all snippets, to both anonymous and authenticated users.
     try {
-      const viewData = {
-        snippets: (await Snippet.find()).map(snippet => ({
-          id: snippet._id,
-          code: snippet.code,
-          owner: snippet.owner,
-          tags: snippet.tags,
-          updated: formatDistanceToNow(snippet.createdAt, { addSuffix: true })
-        })),
-        user: req.session.user
+      const viewData = { user: req.session.user }
+      let filter
+      if (req.session.filter) {
+        const tag = req.session.filter.tag
+        const owner = req.session.filter.owner
+
+        // Create filter for finding specific snippets in collection.
+        filter = {}
+        if (tag) {
+          filter.tags = tag
+        }
+        if (owner) {
+          filter.owner = owner
+        }
+
+        viewData.filter = { tag: tag, owner: owner }
       }
+
+      viewData.snippets = (await Snippet.find(filter)).map(snippet => ({
+        id: snippet._id,
+        code: snippet.code,
+        owner: snippet.owner,
+        tags: snippet.tags,
+        updated: formatDistanceToNow(snippet.createdAt, { addSuffix: true })
+      }))
 
       res.render('snippets/index', { viewData })
     } catch (error) {
@@ -93,64 +108,45 @@ export class SnippetsController {
     }
   }
 
-  async filter (req, res, next) {
-    try {
-      const tag = req.session.filter.tag
-      const owner = req.session.filter.owner
-
-      const filter = {}
-      if (tag) {
-        filter.tags = tag
-      }
-      if (owner) {
-        filter.owner = owner
-      }
-
-      const viewData = {
-        filter: {
-          tag: tag,
-          owner: owner
-        },
-        snippets: (await Snippet.find(filter)).map(snippet => ({
-          id: snippet._id,
-          code: snippet.code,
-          owner: snippet.owner,
-          tags: snippet.tags,
-          updated: formatDistanceToNow(snippet.createdAt, { addSuffix: true })
-        })),
-        user: req.session.user
-      }
-
-      res.render('snippets/index', { viewData })
-    } catch (error) {
-      next(error)
-    }
-  }
-
-  filterPost (req, res, next) {
-    try {
-      if (!req.body.tag && !req.body.owner) {
-        throw new Error('You have to specify one tag and/or one username')
-      }
+  /**
+   * Filters the snippets by one tag and/or one owner, or clears filter.
+   * User can be either anonymous or authenticated.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   */
+  indexPost (req, res) {
+    if (req.body) {
       req.session.filter = {
         tag: req.body.tag,
         owner: req.body.owner
       }
-
-      res.redirect('./filter')
-    } catch (error) {
-      req.session.flash = { type: 'error', text: error.message }
-      res.redirect('.')
+    } else {
+      delete req.session.filter
     }
+
+    res.redirect('./snippets')
   }
 
-  register (req, res, next) {
-    // Return html form so that user can register.
+  /**
+   * Returns a HTML form for the user to register.
+   * User must be anonymous.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   */
+  register (req, res) {
     res.render('snippets/register')
   }
 
-  async registerPost (req, res, next) {
-    // Register user.
+  /**
+   * Registers user by storing the username and password in a MongoDB collection.
+   * User must be anonymous.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   */
+  async registerPost (req, res) {
     try {
       const user = new User({ username: req.body.username, password: req.body.password })
       await user.save()
@@ -166,23 +162,23 @@ export class SnippetsController {
 
   /**
    * Returns a HTML form for the user to log in.
+   * User must be anonymous.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
    */
   login (req, res) {
-    // User must be anonymous.
     res.render('snippets/login')
   }
 
   /**
-   * Logs in a user.
+   * Logs in a user by regenerating the session.
+   * User must be anonymous.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
    */
   async loginPost (req, res) {
-    // User must be anonymous.
     try {
       const user = await User.authenticate(req.body.username, req.body.password)
       req.session.regenerate(error => {
@@ -202,12 +198,25 @@ export class SnippetsController {
     }
   }
 
+  /**
+   * Returns a HTML form for the user to log out.
+   * User must be autheticated.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   */
   logout (req, res) {
     res.render('snippets/logout')
   }
 
-  logoutPost (req, res, next) {
-    // Log out user.
+  /**
+   * Logs out a user by destroying the session.
+   * User must be autheticated.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   */
+  logoutPost (req, res) {
     try {
       req.session.destroy(error => {
         if (error) {
@@ -225,23 +234,23 @@ export class SnippetsController {
 
   /**
    * Returns a HTML form for creating a new snippet.
+   * User must be autheticated.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
    */
   create (req, res) {
-    // Render a html form. User needs to be authenticated.
     res.render('snippets/create')
   }
 
   /**
    * Creates a new snippet.
+   * User must be autheticated.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
    */
   async createPost (req, res) {
-    // Create a new snippet. User needs to be autheticated.
     try {
       const snippet = new Snippet({
         code: req.body.snippet,
@@ -286,6 +295,7 @@ export class SnippetsController {
 
   /**
    * Returns a HTML form for deleting a snippet.
+   * User must be authenticated and authorized (i.e. owner of the snippet).
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
@@ -297,12 +307,12 @@ export class SnippetsController {
 
   /**
    * Deletes a snippet.
+   * User must be authenticated and authorized (i.e. owner of the snippet).
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
    */
   async deletePost (req, res) {
-    // Delete snippet. User needs to be authenticated, and authorized (i.e. needs to be the owner/creator of the snippet).
     try {
       await Snippet.findByIdAndDelete(req.body.id)
       req.session.flash = { type: 'success', text: 'The snippet was successfully deleted.' }

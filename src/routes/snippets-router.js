@@ -6,9 +6,7 @@ export const router = express.Router()
 const controller = new SnippetsController()
 
 router.get('/', controller.index)
-
-router.get('/filter', controller.filter)
-router.post('/filter', controller.filterPost)
+router.post('/', controller.indexPost)
 
 router.get('/register', controller.authorizeRegLogin, controller.register)
 router.post('/register', controller.authorizeRegLogin, controller.registerPost)
