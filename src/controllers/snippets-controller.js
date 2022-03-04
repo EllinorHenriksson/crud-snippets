@@ -219,7 +219,7 @@ export class SnippetsController {
       // Store authenticated user in session store.
       req.session.user = user.username
 
-      req.session.flash = { type: 'success', text: 'Login succeeded.' }
+      req.session.flash = { type: 'success', text: `Welcome ${user.username}!` }
       res.redirect('.')
     } catch (error) {
       req.session.flash = { type: 'error', text: error.message }

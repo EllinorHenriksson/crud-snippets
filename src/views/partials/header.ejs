@@ -12,7 +12,9 @@
           <a href="./snippets/register">Register</a>
         </li>
         <li>
-          <a href="./snippets/login">Login</a>
+          <div>
+            <a href="./snippets/login">Login</a>
+          </div>
         </li>
       <% } else { %>
         <li>
@@ -22,6 +24,9 @@
           <div>
             <a href="./snippets/logout">Log out</a>
           </div>
+        </li>
+        <li>
+          User: <%= user %>
         </li>
       <% } %>
     </ul>
