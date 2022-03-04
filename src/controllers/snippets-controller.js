@@ -108,13 +108,15 @@ export class SnippetsController {
         viewData.filter = { tag: tag, owner: owner }
       }
 
-      viewData.snippets = (await Snippet.find(filter)).map(snippet => ({
-        id: snippet._id,
-        code: snippet.code,
-        owner: snippet.owner,
-        tags: snippet.tags,
-        updated: formatDistanceToNow(snippet.createdAt, { addSuffix: true })
-      }))
+      viewData.snippets = (await Snippet.find(filter))
+        .sort((a, b) => b.updatedAt - a.updatedAt)
+        .map(snippet => ({
+          id: snippet._id,
+          code: snippet.code,
+          owner: snippet.owner,
+          tags: snippet.tags,
+          updated: formatDistanceToNow(snippet.createdAt, { addSuffix: true })
+        }))
 
       res.render('snippets/index', { viewData })
     } catch (error) {
