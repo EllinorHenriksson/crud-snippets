@@ -21,31 +21,35 @@
   <form action="./snippets" method="post"><button type="submit">Clear</button></form>
 <% } %>
 
-<table>
-  <caption>List of snippets</caption>
-  <thead>
-    <tr><th scope="col">Tags</th><th scope="col">Code</th><th scope="col">Created by</th><th scope="col">Last updated</th><th scope="col">Edit</th></tr>
-  </thead>
-  <tbody>
-    <% for (const snippet of viewData.snippets) { %>
-      <tr>
-        <td>
-          <% for (const tag of snippet.tags) { %>
-            <%= tag %>
-          <% } %>
-        </td>
-        <td id="code"><code><%= snippet.code %></code></td>
-        <td><%= snippet.owner %></td>
-        <td><%= snippet.updated %></td>
-        <td><% if (snippet.owner === viewData.user) { %>
-          <div>
-            <a href="./snippets/<%= snippet.id %>/update"><img src="./img/edit.png" alt="Edit icon"></a>
-          </div>
-          <div>
-            <a href="./snippets/<%= snippet.id %>/delete"><img src="./img/delete.png" alt="Delete icon"></a>
-          </div>
-        <% } %></td>
-      </tr>
-    <% } %>
-  </tbody>
-</table>
+<% if (!viewData.snippets.length) { %>
+  <tr><td colspan="5">No search result</td></tr>
+<% } else { %>
+  <table>
+    <caption>List of snippets</caption>
+    <thead>
+      <tr><th scope="col">Tags</th><th scope="col">Code</th><th scope="col">Created by</th><th scope="col">Last updated</th><th scope="col">Edit</th></tr>
+    </thead>
+    <tbody>
+      <% for (const snippet of viewData.snippets) { %>
+        <tr>
+          <td>
+            <% for (const tag of snippet.tags) { %>
+              <%= tag %>
+            <% } %>
+          </td>
+          <td id="code"><code><%= snippet.code %></code></td>
+          <td><%= snippet.owner %></td>
+          <td><%= snippet.updated %></td>
+          <td><% if (snippet.owner === viewData.user) { %>
+            <div>
+              <a href="./snippets/<%= snippet.id %>/update"><img src="./img/edit.png" alt="Edit icon"></a>
+            </div>
+            <div>
+              <a href="./snippets/<%= snippet.id %>/delete"><img src="./img/delete.png" alt="Delete icon"></a>
+            </div>
+          <% } %></td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+<% } %>

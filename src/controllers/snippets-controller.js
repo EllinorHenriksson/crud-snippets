@@ -83,6 +83,16 @@ export class SnippetsController {
       const viewData = { user: req.session.user }
       let filter
       if (req.session.filter) {
+        /*
+        const tag = req.session.filter.tag.trim()
+        const owner = req.session.filter.owner.trim()
+
+        if (tag.includes(' ') || owner.includes(' ')) {
+          req.session.flash = { type: 'error', text: 'You may only include one tag and/or one owner.' }
+          res.redirect('./snippets')
+        }
+        */
+
         const tag = req.session.filter.tag
         const owner = req.session.filter.owner
 
@@ -120,10 +130,18 @@ export class SnippetsController {
    * @param {object} res - Express response object.
    */
   indexPost (req, res) {
-    if (req.body) {
-      req.session.filter = {
-        tag: req.body.tag,
-        owner: req.body.owner
+    if (Object.keys(req.body).length !== 0) {
+      if (req.body.tag || req.body.owner) {
+        const tag = req.body.tag.trim()
+        const owner = req.body.owner.trim()
+
+        if (tag.includes(' ') || owner.includes(' ')) {
+          req.session.flash = { type: 'error', text: 'You may only include one tag and/or one owner.' }
+        } else {
+          req.session.filter = { tag: tag, owner: owner }
+        }
+      } else {
+        req.session.flash = { type: 'error', text: 'You must include one tag and/or one owner.' }
       }
     } else {
       delete req.session.filter
