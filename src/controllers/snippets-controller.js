@@ -130,19 +130,24 @@ export class SnippetsController {
    * @param {object} res - Express response object.
    */
   indexPost (req, res) {
+    // If filter is applied
     if (Object.keys(req.body).length !== 0) {
+      // If at least one property is set
       if (req.body.tag || req.body.owner) {
         const tag = req.body.tag.trim()
         const owner = req.body.owner.trim()
 
+        // If more than one tag or one owner is set
         if (tag.includes(' ') || owner.includes(' ')) {
           req.session.flash = { type: 'error', text: 'You may only include one tag and/or one owner.' }
         } else {
           req.session.filter = { tag: tag, owner: owner }
         }
+      // If no property is set.
       } else {
         req.session.flash = { type: 'error', text: 'You must include one tag and/or one owner.' }
       }
+    // If filter is cleared
     } else {
       delete req.session.filter
     }
