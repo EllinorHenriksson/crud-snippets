@@ -1,3 +1,70 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 16px;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+aside, main {
+  padding: 1rem;
+}
+
+/* Styling for navigation */
+nav div {
+  background-color: #420d30;
+  color: #e9dde5;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  padding: 1rem;
+  padding-left: 0;
+  margin: 0;
+}
+
+nav li {
+  padding: 0.5em;
+  font-size: 1.2rem;
+}
+
+nav li:first-child {
+  font-weight: bold;
+} 
+
+nav li:nth-child(5) {
+  margin-left: auto;
+}
+
+nav a {
+  color: #e9dde5;
+  text-decoration: none;
+}
+
+nav a:hover, nav a:active {
+  color: #ffffff;
+}
+
+/* Styling for flash-messages */
+.flash {
+  font-size: 0.9rem;
+  padding: 1rem;
+  max-width: 100%;
+}
+
+.flash-success {
+  background-color: #b7e9bc;
+  color: #052f08;
+}
+
+.flash-error{
+  background-color: #da8c8c;
+  color: #5f0d0d;
+}
+
+
 table img {
   width: 40px;
 }
