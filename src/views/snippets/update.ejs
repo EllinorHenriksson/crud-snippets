@@ -1,0 +1,8 @@
+<h1>Edit</h1>
+
+<form action="./snippets/<%= viewData.id %>/update" method="post">
+  <input type="text" name="id" value="<%= viewData.id %>">
+  <textarea name="code" cols="30" rows="10" autofocus><%= viewData.code %></textarea>
+  <button type="submit">Edit</button>
+</form>
+<div><a href="./snippets">Cancel</a></div>

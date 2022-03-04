@@ -52,17 +52,21 @@ export class SnippetsController {
    * @param {Function} next - Express next middleware function.
    */
   async authorizeUpDel (req, res, next) {
-    const firstIndex = req.url.indexOf('/')
-    const secondIndex = req.url.indexOf('/', firstIndex + 1)
-    const id = req.url.slice(firstIndex + 1, secondIndex)
-    const snippet = await Snippet.findById(id)
+    try {
+      const firstIndex = req.url.indexOf('/')
+      const secondIndex = req.url.indexOf('/', firstIndex + 1)
+      const id = req.url.slice(firstIndex + 1, secondIndex)
+      const snippet = await Snippet.findById(id)
 
-    if (!req.session.user) {
-      next(createError(404))
-    } else if (req.session.user !== snippet.owner) {
-      next(createError(403))
-    } else {
-      next()
+      if (!req.session.user) {
+        next(createError(404))
+      } else if (req.session.user !== snippet.owner) {
+        next(createError(403))
+      } else {
+        next()
+      }
+    } catch (error) {
+      next(error)
     }
   }
 
@@ -275,22 +279,55 @@ export class SnippetsController {
 
   /**
    * Returns a HTML form for updating a snippet.
+   * User must be authenticated and authorized (i.e. owner of the snippet).
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
    */
-  update (req, res) {
-    // Return html form so user can update his/her snippet. User needs to be authenticated, and authorized (i.e. needs to be the owner/creator of the snippet).
+  async update (req, res, next) {
+    try {
+      const firstIndex = req.url.indexOf('/')
+      const secondIndex = req.url.indexOf('/', firstIndex + 1)
+      const id = req.url.slice(firstIndex + 1, secondIndex)
+
+      const snippet = await Snippet.findById(id)
+      const code = snippet.code
+
+      const viewData = {
+        id: id,
+        code: code
+      }
+      res.render('snippets/update', { viewData })
+    } catch (error) {
+      next(error)
+    }
   }
 
   /**
    * Updates a snippet.
+   * User must be authenticated and authorized (i.e. owner of the snippet).
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
    */
-  updatePost (req, res) {
-    // Update snippet. User needs to be authenticated, and authorized (i.e. needs to be the owner/creator of the snippet).
+  async updatePost (req, res) {
+    try {
+      const id = req.body.id
+      const code = req.body.code
+      const snippet = await Snippet.findById(id)
+      if (snippet) {
+        snippet.code = code
+        await snippet.save()
+        req.session.flash = { type: 'success', text: 'The snippet was successfully updated.' }
+      } else {
+        req.session.flash = { type: 'error', text: 'The snippet was deleted by another user after you accessed the code.' }
+      }
+      res.redirect('..')
+    } catch (error) {
+      req.session.flash = { type: 'error', text: error.message }
+      res.redirect('./update')
+    }
   }
 
   /**
@@ -301,7 +338,11 @@ export class SnippetsController {
    * @param {object} res - Express response object.
    */
   delete (req, res) {
-    const viewData = { id: req.url.slice(1, -8) }
+    const firstIndex = req.url.indexOf('/')
+    const secondIndex = req.url.indexOf('/', firstIndex + 1)
+    const id = req.url.slice(firstIndex + 1, secondIndex)
+
+    const viewData = { id: id }
     res.render('snippets/delete', { viewData })
   }
 
