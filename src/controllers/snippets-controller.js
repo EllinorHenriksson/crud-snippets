@@ -115,7 +115,7 @@ export class SnippetsController {
           code: snippet.code,
           owner: snippet.owner,
           tags: snippet.tags,
-          updated: formatDistanceToNow(snippet.createdAt, { addSuffix: true })
+          updated: formatDistanceToNow(snippet.updatedAt, { addSuffix: true })
         }))
 
       res.render('snippets/index', { viewData })
@@ -317,12 +317,13 @@ export class SnippetsController {
       const id = req.url.slice(firstIndex + 1, secondIndex)
 
       const snippet = await Snippet.findById(id)
-      const code = snippet.code
 
       const viewData = {
         id: id,
-        code: code
+        code: snippet.code,
+        tags: snippet.tags.join(' ')
       }
+
       res.render('snippets/update', { viewData })
     } catch (error) {
       next(error)
@@ -340,9 +341,17 @@ export class SnippetsController {
     try {
       const id = req.body.id
       const code = req.body.code
+      const tags = req.body.tags.trim().split(' ').map(tag => {
+        if (!tag.startsWith('#')) {
+          return tag.padStart(tag.length + 1, '#')
+        }
+        return tag
+      })
+
       const snippet = await Snippet.findById(id)
       if (snippet) {
         snippet.code = code
+        snippet.tags = tags
         await snippet.save()
         req.session.flash = { type: 'success', text: 'The snippet was successfully updated.' }
       } else {

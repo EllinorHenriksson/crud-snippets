@@ -1,6 +1,6 @@
 <h1>Register</h1>
-<form action="./snippets/register" method="post">
+<form action="./snippets/register" method="post" class="form">
   <label>Username: <input type="text" name="username" placeholder="username" autofocus required></label>
-  <label>Password: <input type="password" name="password" placeholder="password" required></label>
+  <label>Password: <input type="password" name="password" placeholder="password (&#8805 10 chars)" required minlength="10" maxlength="1000" id="password"></label>
   <button type="submit">Register</button>
 </form>

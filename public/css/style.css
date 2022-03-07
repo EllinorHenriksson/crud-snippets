@@ -11,6 +11,10 @@ aside, main {
   padding: 1rem;
 }
 
+h1 {
+  color: #420d30;
+}
+
 /* Styling for navigation */
 nav div {
   background-color: #420d30;
@@ -64,8 +68,8 @@ nav a:hover, nav a:active {
   color: #5f0d0d;
 }
 
-/* Styling for form, index page */
-fieldset {
+/* Styling for forms */
+fieldset, .form {
   border: none;
   background-color: #caafc2;
   padding: 1rem;
@@ -80,13 +84,13 @@ fieldset label {
   margin-right: 1rem;
 }
 
-fieldset input {
+input {
   padding: 8px;
   font-size: 1rem;
   border: none;
 }
 
-button {
+button, .button {
   font-size: 0.9rem;
   font-weight: bold;
   border: none;
@@ -97,8 +101,54 @@ button {
   cursor: pointer;
 }
 
+.button {
+  width: max-content;
+  display: inline-block;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.button a {
+  color: #e9dde5;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
 button:hover, button:active {
   color: #ffffff;
+}
+
+.button:hover a, .button:active a {
+  color: #ffffff;
+}
+
+#password:valid {
+  background-color: #b7e9bc;
+}
+
+#password:invalid {
+  background-color: #da8c8c;
+}
+
+/* Styling for create page */
+textarea {
+  width: 500px;
+  height: 300px;
+  font-size: 1rem;
+  padding: 8px;
+  border: none;
+  margin-bottom: 10px;
+}
+
+.createform label, .editform label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.createform input, .editform input {
+  display: block;
+  width: 500px;
+  margin-bottom: 10px;
 }
 
 /* Styling for table, index page */
@@ -169,4 +219,10 @@ tbody tr:nth-child(odd) {
 
 .edit img {
   width: 40px;
+  border-radius: 5px;
+}
+
+/* Hiding the id */
+input[name="id"] {
+  display: none;
 }
