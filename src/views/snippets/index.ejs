@@ -22,29 +22,31 @@
 <% } %>
 
 <% if (!viewData.snippets.length) { %>
-  <tr><td colspan="5">No search result</td></tr>
+  <p>No search results.</p>
 <% } else { %>
   <table>
     <caption>List of snippets</caption>
     <thead>
-      <tr><th scope="col">Tags</th><th scope="col">Code</th><th scope="col">Created by</th><th scope="col">Last updated</th><th scope="col">Edit</th></tr>
+      <tr><th scope="col" id="tags">Tags</th><th scope="col" id="code">Code</th><th scope="col" id="owner">Created by</th><th scope="col" id="updated">Last updated</th><th scope="col" id="edit">Edit</th></tr>
     </thead>
     <tbody>
       <% for (const snippet of viewData.snippets) { %>
         <tr>
-          <td>
-            <% for (const tag of snippet.tags) { %>
-              <%= tag %>
-            <% } %>
+          <td class="tags">
+            <div>
+              <% for (const tag of snippet.tags) { %>
+                <%= tag %>
+              <% } %>
+            </div>
           </td>
-          <td id="code"><code><%= snippet.code %></code></td>
-          <td><%= snippet.owner %></td>
+          <td class="code">
+            <div><code><%= snippet.code %></code></div>
+          </td>
+          <td><div class="owner"><%= snippet.owner %></div></td>
           <td><%= snippet.updated %></td>
-          <td><% if (snippet.owner === viewData.user) { %>
+          <td class="edit"><% if (snippet.owner === viewData.user) { %>
             <div>
               <a href="./snippets/<%= snippet.id %>/update"><img src="./img/edit.png" alt="Edit icon"></a>
-            </div>
-            <div>
               <a href="./snippets/<%= snippet.id %>/delete"><img src="./img/delete.png" alt="Delete icon"></a>
             </div>
           <% } %></td>

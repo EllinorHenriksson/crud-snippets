@@ -64,11 +64,109 @@ nav a:hover, nav a:active {
   color: #5f0d0d;
 }
 
+/* Styling for form, index page */
+fieldset {
+  border: none;
+  background-color: #caafc2;
+  padding: 1rem;
+  width: max-content;
+}
 
-table img {
-  width: 40px;
+legend {
+  font-weight: bold;
+}
+
+fieldset label {
+  margin-right: 1rem;
+}
+
+fieldset input {
+  padding: 8px;
+  font-size: 1rem;
+  border: none;
+}
+
+button {
+  font-size: 0.9rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  padding: 8px;
+  background-color: #420d30;
+  color: #e9dde5;
+  cursor: pointer;
+}
+
+button:hover, button:active {
+  color: #ffffff;
+}
+
+/* Styling for table, index page */
+caption {
+  caption-side: bottom;
+  text-align: left;
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+
+table {
+  border-collapse: collapse;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  margin-top: 1rem;
+  width: 100%;
+  table-layout: fixed;
+}
+
+#tags {
+  width: 20%;
 }
 
 #code {
+  width: 40%;
+}
+
+#owner {
+  width: 15%;
+}
+
+#updated {
+  width: 15%;
+}
+
+#edit {
+  width: 10%;
+}
+
+th, td {
+  padding: 1rem;
+}
+
+td {
+  height: 200px;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #e9dde5;
+}
+
+.tags div, .code div, .owner div {
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+}
+
+.code {
   white-space: pre;
+}
+
+.edit div {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.edit img {
+  width: 40px;
 }
