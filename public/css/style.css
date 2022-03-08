@@ -130,7 +130,7 @@ button:hover, button:active {
   background-color: #da8c8c;
 }
 
-/* Styling for create page */
+/* Styling for create and edit pages */
 textarea {
   width: 500px;
   height: 300px;
@@ -207,10 +207,6 @@ tbody tr:nth-child(odd) {
   align-items: center;
 }
 
-.code {
-  white-space: pre;
-}
-
 .edit div {
   display: flex;
   align-items: center;
@@ -225,4 +221,9 @@ tbody tr:nth-child(odd) {
 /* Hiding the id */
 input[name="id"] {
   display: none;
+}
+
+/* Styling for error page */
+#error h1, h2, pre {
+  color: #000000;
 }
