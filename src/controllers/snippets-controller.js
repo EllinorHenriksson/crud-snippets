@@ -83,16 +83,6 @@ export class SnippetsController {
       const viewData = { user: req.session.user }
       let filter
       if (req.session.filter) {
-        /*
-        const tag = req.session.filter.tag.trim()
-        const owner = req.session.filter.owner.trim()
-
-        if (tag.includes(' ') || owner.includes(' ')) {
-          req.session.flash = { type: 'error', text: 'You may only include one tag and/or one owner.' }
-          res.redirect('./snippets')
-        }
-        */
-
         const tag = req.session.filter.tag
         const owner = req.session.filter.owner
 
@@ -252,9 +242,6 @@ export class SnippetsController {
           throw new Error('Failed to log out.')
         }
       })
-
-      // OBS! Hur få till ett flash-meddelande när session redan är destroyed?
-      // req.session.flash = { type: 'success', text: 'Logout succeeded.' }
       res.redirect('.')
     } catch (error) {
       req.session.flash = { type: 'error', text: error.message }

@@ -1,3 +1,10 @@
+/**
+ * The snippets router.
+ *
+ * @author Ellinor Henriksson
+ * @version 1.0.0
+ */
+
 import express from 'express'
 import { SnippetsController } from '../controllers/snippets-controller.js'
 
