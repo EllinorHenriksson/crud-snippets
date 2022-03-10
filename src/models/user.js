@@ -6,14 +6,15 @@ const schema = new mongoose.Schema({
   username: {
     type: String,
     required: '`{PATH}` is required!',
+    maxlength: [30, '`{PATH}` must not be longer than {MAXLENGTH} characters.'],
     unique: true,
     trim: true
   },
   password: {
     type: String,
     required: '`{PATH}` is required!',
-    minlength: [10, 'The password must be at least 10 characters long.'],
-    maxlength: [1000, 'The password must not be longer than 1000 characters.']
+    minlength: [10, '`{PATH}` must be at least {MINLENGTH} characters long.'],
+    maxlength: [1000, '`{PATH}` must not be longer than {MAXLENGTH} characters.']
   }
 }, {
   timestamps: true

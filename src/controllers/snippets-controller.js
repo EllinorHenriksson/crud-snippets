@@ -269,7 +269,7 @@ export class SnippetsController {
   async createPost (req, res) {
     try {
       const snippet = new Snippet({
-        code: req.body.snippet,
+        code: req.body.code,
         owner: req.session.user,
         tags: req.body.tags.trim().split(' ').map(tag => {
           if (!tag.startsWith('#')) {

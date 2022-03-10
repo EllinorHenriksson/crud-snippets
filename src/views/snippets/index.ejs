@@ -22,7 +22,7 @@
 <% } %>
 
 <% if (!viewData.snippets.length) { %>
-  <p>No search results.</p>
+  <p>No snippets.</p>
 <% } else { %>
   <table>
     <caption>List of snippets</caption>
@@ -42,7 +42,7 @@
           <td class="code">
             <div><pre><%= snippet.code %></pre></div>
           </td>
-          <td><div class="owner"><%= snippet.owner %></div></td>
+          <td class="owner"><div><%= snippet.owner %></div></td>
           <td><%= snippet.updated %></td>
           <td class="edit"><% if (snippet.owner === viewData.user) { %>
             <div>

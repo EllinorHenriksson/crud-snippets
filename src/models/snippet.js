@@ -5,8 +5,8 @@ const schema = new mongoose.Schema({
   code: {
     type: String,
     required: '`{PATH}` is required!',
-    maxlength: [10000, '`{PATH}` must not contain more than ({MAXLENGTH}) characters.'],
-    minlength: [3, '`{PATH}` must contain more than ({MINLENGTH}) characters.']
+    minlength: [3, '`{PATH}` must contain more than {MINLENGTH} characters.'],
+    maxlength: [10000, '`{PATH}` must not contain more than {MAXLENGTH} characters.']
   },
   owner: {
     type: String,
