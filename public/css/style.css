@@ -218,6 +218,22 @@ tbody tr:nth-child(odd) {
   border-radius: 5px;
 }
 
+/* Styling for start page */
+#welcome {
+  text-align: center;
+}
+
+/* Styling for log out page */
+#logout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#logoutbuttons {
+  text-align: center;
+}
+
 /* Hiding the id */
 input[name="id"] {
   display: none;
