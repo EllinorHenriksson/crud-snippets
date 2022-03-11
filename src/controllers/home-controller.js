@@ -9,7 +9,13 @@
  * Encapsulates a controller.
  */
 export class HomeController {
-  index (req, res, next) {
+  /**
+   * Renders the start page.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response objec
+   */
+  index (req, res) {
     res.render('home/index')
   }
 }
