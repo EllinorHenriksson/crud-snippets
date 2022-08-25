@@ -1,0 +1,57 @@
+<h1>Snippets</h1>
+
+<form action="./snippets" method="post">
+  <fieldset>
+    <legend>Filter results</legend>
+    <label>Tag (#): <input type="text" name="tag" placeholder="#tag"></label>
+    <label>Created by: <input type="text" name="owner" placeholder="username"></label>
+    <button type="submit">Filter</button>
+  </fieldset>
+</form>
+
+<% if (viewData.filter) { %>
+  <p>Filters:
+    <% if (viewData.filter.tag) { %>
+      <%= viewData.filter.tag %>
+    <% } %>
+    <% if (viewData.filter.owner) { %>
+      <%= viewData.filter.owner %>
+    <% } %>
+  </p>
+  <form action="./snippets" method="post"><button type="submit">Clear</button></form>
+<% } %>
+
+<% if (!viewData.snippets.length) { %>
+  <p>No snippets.</p>
+<% } else { %>
+  <table>
+    <caption>List of snippets</caption>
+    <thead>
+      <tr><th scope="col" id="tags">Tags</th><th scope="col" id="code">Code</th><th scope="col" id="owner">Created by</th><th scope="col" id="updated">Last updated</th><th scope="col" id="edit">Edit</th></tr>
+    </thead>
+    <tbody>
+      <% for (const snippet of viewData.snippets) { %>
+        <tr>
+          <td class="tags">
+            <div>
+              <% for (const tag of snippet.tags) { %>
+                <%= tag %>
+              <% } %>
+            </div>
+          </td>
+          <td class="code">
+            <div><pre><%= snippet.code %></pre></div>
+          </td>
+          <td class="owner"><div><%= snippet.owner %></div></td>
+          <td><%= snippet.updated %></td>
+          <td class="edit"><% if (snippet.owner === viewData.user) { %>
+            <div>
+              <a href="./snippets/<%= snippet.id %>/update"><img src="./img/edit.png" alt="Edit icon"></a>
+              <a href="./snippets/<%= snippet.id %>/delete"><img src="./img/delete.png" alt="Delete icon"></a>
+            </div>
+          <% } %></td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+<% } %>

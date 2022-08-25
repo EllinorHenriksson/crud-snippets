@@ -1,0 +1,11 @@
+<h1>Edit Snippet</h1>
+
+<form action="./snippets/<%= viewData.id %>/update" method="post" class="form editform">
+  <input type="text" name="id" value="<%= viewData.id %>">
+  <label for="snippetedit">Snippet: </label>
+  <textarea name="code" id="snippetedit" cols="30" rows="10" autofocus minlength="3" maxlength="10000"><%= viewData.code %></textarea>
+  <label for="tagscreate">Tags (#): </label>
+  <input type="text" name="tags" id="tagscreate" value="<%= viewData.tags %>">
+  <button type="submit">Edit</button>
+  <div class="button"><a href="./snippets">Cancel</a></div>
+</form>
